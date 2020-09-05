@@ -62,25 +62,13 @@ frames = 10
 videos = augment(videos, [1, 2], vid_len,frames)
 
 epochs = 5
-def batch_div(videos):
-  batches = np.zeros((frames, img_dim[0],img_dim[1],1))
-  n = 0 
-  for bth in range(0,videos.shape[0],frames):
-    if bth+frames <= videos.shape[0]:
-      batches[n] = videos[bth:bth+frames]
-      n += 1
-  return batches
 
 """keras"""
-
-!pip install keras-layer-normalization
 
 import keras
 from keras.layers import Conv2DTranspose, ConvLSTM2D, BatchNormalization, TimeDistributed, Conv2D
 from keras.models import Sequential, load_model
 from keras_layer_normalization import LayerNormalization
-
-videos[1:1+frames].shape
 
 def model():
     training_set = videos
@@ -109,5 +97,5 @@ def model():
     #seq.save(Config.MODEL_PATH)
     return seq
 
-seq = model()
+model()
 

@@ -14,35 +14,35 @@ import tensorflow as tf
 import os
 from tqdm import tqdm
 
-path = '/content/drive/My Drive/Anomaly detection/UCF/Anomaly-Detection-Dataset/Normal_Videos_for_Event_Recognition'
+path = '/content/drive/My Drive/Anomaly detection/UCF/Anomaly-Detection-Dataset/Training-Normal-Videos-Part-1'
 
-videos = []
-vid_len = []
-img_dim = (128, 128)
-n = 0
-for vd in tqdm(os.listdir(path)):
-  vid = cv2.VideoCapture(os.path.join(path, vd))
-  frames = []
-  cnt = 0
-  n += 1
-  while vid.isOpened():
-    ret, frame = vid.read()
-    if not ret:
-      print("Can't receive frame (stream end?). Exiting ...")
-      break
-    cnt += 1
-    gray = cv2.resize((cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY))/256, img_dim).reshape([img_dim[0], img_dim[1], 1])
-    #cv2.imshow(gray)
+def load(pth):
+  videos = []
+  vid_len = []
+  for vd in pth:
+    vid = cv2.VideoCapture(os.path.join(path, vd))
+    frames = []
+    cnt = 0
+    
+    while vid.isOpened():
+      ret, frame = vid.read()
+      if not ret:
+        print("Can't receive frame (stream end?). Exiting ...")
+        break
+      cnt += 1
+      gray = cv2.resize((cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY))/256, img_dim).reshape([img_dim[0], img_dim[1], 1])
+      #cv2.imshow(gray)
 
-    frames.append(gray)
-    #if cv2.waitKey(25) & 0xFF == ord('q'): 
-     # break
-  vid.release()
-  #cv2.destroyAllWindows()
-  videos.append(frames)
-  vid_len.append(cnt)
-  if n == 1:
-    break
+      frames.append(gray)
+      if cnt >= 10000:
+        break
+      #if cv2.waitKey(25) & 0xFF == ord('q'): 
+      # break
+    vid.release()
+    #cv2.destroyAllWindows()
+    videos.append(frames)
+    vid_len.append(cnt)
+  return videos, vid_len
 
 def augment(videos, stride, vid_len, frames = 10):
   agmted = np.zeros((frames, img_dim[0], img_dim[1], 1))
@@ -58,11 +58,6 @@ def augment(videos, stride, vid_len, frames = 10):
           cnt = 0
   return np.array(clips)
 
-frames = 10
-videos = augment(videos, [1, 2], vid_len,frames)
-
-epochs = 5
-
 """keras"""
 
 import keras
@@ -70,32 +65,83 @@ from keras.layers import Conv2DTranspose, ConvLSTM2D, BatchNormalization, TimeDi
 from keras.models import Sequential, load_model
 from keras_layer_normalization import LayerNormalization
 
-def model():
+
+def model(reload_model=True):
     training_set = videos
-    seq = Sequential()
-    seq.add(TimeDistributed(Conv2D(128, (11, 11), strides=4, padding="same"), batch_input_shape=(None, frames, img_dim[0], img_dim[1], 1)))
-    seq.add(LayerNormalization())
-    seq.add(TimeDistributed(Conv2D(64, (5, 5), strides=2, padding="same")))
-    seq.add(LayerNormalization())
-    # # # # #
-    seq.add(ConvLSTM2D(64, (3, 3), padding="same", return_sequences=True))
-    seq.add(LayerNormalization())
-    seq.add(ConvLSTM2D(32, (3, 3), padding="same", return_sequences=True))
-    seq.add(LayerNormalization())
-    seq.add(ConvLSTM2D(64, (3, 3), padding="same", return_sequences=True))
-    seq.add(LayerNormalization())
-    # # # # #
-    seq.add(TimeDistributed(Conv2DTranspose(64, (5, 5), strides=2, padding="same")))
-    seq.add(LayerNormalization())
-    seq.add(TimeDistributed(Conv2DTranspose(128, (11, 11), strides=4, padding="same")))
-    seq.add(LayerNormalization())
-    seq.add(TimeDistributed(Conv2D(1, (11, 11), activation="sigmoid", padding="same")))
+    if reload_model:
+        seq = load_model('/content/drive/My Drive/Model',custom_objects={'LayerNormalization': LayerNormalization})
+    else:   
+      seq = Sequential()
+      seq.add(TimeDistributed(Conv2D(128, (11, 11), strides=4, padding="same"), batch_input_shape=(None, frames, img_dim[0], img_dim[1], 1)))
+      seq.add(LayerNormalization())
+      seq.add(TimeDistributed(Conv2D(64, (5, 5), strides=2, padding="same")))
+      seq.add(LayerNormalization())
+      # # # # #
+      seq.add(ConvLSTM2D(64, (3, 3), padding="same", return_sequences=True))
+      seq.add(LayerNormalization())
+      seq.add(ConvLSTM2D(32, (3, 3), padding="same", return_sequences=True))
+      seq.add(LayerNormalization())
+      seq.add(ConvLSTM2D(64, (3, 3), padding="same", return_sequences=True))
+      seq.add(LayerNormalization())
+      # # # # #
+      seq.add(TimeDistributed(Conv2DTranspose(64, (5, 5), strides=2, padding="same")))
+      seq.add(LayerNormalization())
+      seq.add(TimeDistributed(Conv2DTranspose(128, (11, 11), strides=4, padding="same")))
+      seq.add(LayerNormalization())
+      seq.add(TimeDistributed(Conv2D(1, (11, 11), activation="sigmoid", padding="same")))
     print(seq.summary())
     seq.compile(loss='mse', optimizer=keras.optimizers.Adam(lr=1e-4, decay=1e-5, epsilon=1e-6))
     seq.fit(training_set, training_set,
             batch_size=frames, epochs=epochs, shuffle=False)
-    #seq.save(Config.MODEL_PATH)
+    seq.save('/content/drive/My Drive/Model')
+    #plt.imshow(seq.predict(videos))
     return seq
 
-model()
+lst = os.listdir(path)
+batch = 5
+img_dim = (128, 128)
+for s in tqdm(range(50, len(lst), batch)):
+  if s+batch <= len(lst):
+    pths = lst[s:s+batch]
+    videos, vid_len = load(pths)
+    frames = 10
+    epochs = 10
+    videos = augment(videos, [1, 2], vid_len,frames)
+    if s == 0:
+      seq = model(reload_model = False)
+    else:
+      seq = model(reload_model=True)
+    videos = None
+    video_len = None
+
+path2 = '/content/drive/My Drive/Anomaly detection/UCF/Anomaly-Detection-Dataset/Training-Normal-Videos-Part-2.zip'
+
+def get_single_test():
+    sz = 200
+    test = np.zeros(shape=(sz, 10, 128, 128, 1))
+    cnt = 0
+    for f in sorted(os.listdir(path_anom)):
+        vid = cv2.VideoCapture(os.path.join(path_anom, f))
+        cnt = 0
+        while vid.isOpened:
+          ret, img = vid.read()
+          img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+          test[cnt,0, :, :, 0] = cv2.resize(img/256 , (128, 128))
+          cnt = cnt + 1
+          if cnt == 10:
+            break
+        break
+    return test
+
+seq = load_model('/content/drive/My Drive/Model',custom_objects={'LayerNormalization': LayerNormalization})
+img_dim = (128, 128)
+#videos, vid_len = load(os.listdir('/content/drive/My Drive/Anomaly detection/UCF/Anomaly-Detection-Dataset/Anomaly-Videos-Part-1/Abuse')[0:1])
+path_anom = '/content/drive/My Drive/Anomaly detection/UCF/Anomaly-Detection-Dataset/Anomaly-Videos-Part-1/Abuse'
+vid = get_single_test()
+pht = seq.predict(vid)
+
+i = 0
+plt.imshow(np.squeeze(pht[0][i]))
+
+plt.imshow(np.squeeze(vid[0][0]))
 

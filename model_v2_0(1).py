@@ -21,6 +21,9 @@ from tensorflow.keras.layers import ConvLSTM2D,Conv2DTranspose, LayerNormalizati
 import keras
 import pprint
 
+physical_devices = tf.config.list_physical_devices('GPU')
+tf.config.experimental.set_memory_growth(physical_devices[0], True)
+
 class Config():
   def __init__(self, train_path, test_path, model_path, img_size = (128, 128), batch_size = 8, mx_frm = 1600, stride = [1, 2], frm_cnt = 10, test_size = 400, epochs = 10):
     self.train_path = train_path
@@ -127,16 +130,13 @@ class Functions(Config):
 
   def load_single_test(self):
     test = np.zeros((self.test_size, self.img_size[0], self.img_size[1], 1))
-    for dir in os.walk(self.test_path):
-      for tst in sorted(dir[2]):
-        path = os.path.join(dir[0], dir[2])
-        frames = self.load_frames(path, agmtd = False)
-        break
-      break
-    test = frames[0:self.test_size]
-    frames = None
-    return test
+    for dir in os.listdir(self.test_path):
+      path = os.path.join(self.test_path, dir)
+      frames = self.load_frames(path, agmt = False)
 
+    test = frames[0:self.test_size]
+    del frames
+    return test
 """Model"""
 
 class Model(Functions):
@@ -200,14 +200,14 @@ class Model(Functions):
 
 def evaluate(test):
     #model = load_model(model_path,custom_objects={'LayerNormalization': LayerNormalization})
-    sz = test.shape[0] - 10
+    sz = test.shape[0] // 10
     sequences = np.zeros((sz, 10, img_dim[0], img_dim[1], 1))
     # apply the sliding window technique to get the sequences
-    for i in range(0, sz):
-        clip = np.zeros((10, img_dim[0], img_dim[1], 1))
-        for j in range(0, 10):
-            clip[j] = test[i + j, :, :, :]
-        sequences[i] = clip
+    cnt = 0
+    for i in range(0, test.shape[0], 10):
+      if i + 10 <= test.shape[0]:
+        sequences[cnt, :, :, :, :] = test[i:i+10]
+        cnt += 1
     test = None
     clip = None
     # get the reconstruction cost of all the sequences
@@ -215,17 +215,18 @@ def evaluate(test):
     sequences_reconstruction_cost = np.array([np.linalg.norm(np.subtract(sequences[i],reconstructed_sequences[i])) for i in range(0,sz)])
     sa = (sequences_reconstruction_cost - np.min(sequences_reconstruction_cost)) / np.max(sequences_reconstruction_cost)
     sr = 1.0 - sa
-    #print(sr)
-    if (sr<=0.93).any():
-      print('Anomaly Detected')
-      print(time.clock())
+    print(sr)
+    if (sr<=0.96).any() or (sr<=0.96).all():
+      print('Anomaly Detected') 
+      # print(time.clock())
     else:
       print('everything is normal')
     #plot the regularity scores
-    #plt.plot(sr)
-    #plt.ylabel('regularity score Sr(t)')
-    #plt.xlabel('frame t')
-    #plt.show()
+    # print(sr)
+    # plt.plot(sr)
+    # plt.ylabel('regularity score Sr(t)')
+    # plt.xlabel('frame t')
+    # plt.show()
 
 def test(test_path):
   for pth in os.listdir(test_path):
@@ -242,13 +243,14 @@ def test(test_path):
       frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
       frame = cv2.resize(frame/256, img_dim)
       frames.append(frame.reshape((img_dim[0],img_dim[1], 1)))
-      if n == 30:
-        t0 = time.clock()
-        frames = np.array(frames).reshape((30, img_dim[0], img_dim[1], 1))
+      if n == 300:
+        # t0 = time.clock()
+        frames = np.array(frames).reshape((300, img_dim[0], img_dim[1], 1))
         evaluate(frames)
         n = 0
-        t1 = t0 - time.clock()
-        print('Time taken to predict for 1 sec frames = ', t1)
+        frames =[]
+        # t1 = -t0 + time.clock()
+        # print('Time taken to predict for 1 sec frames = ', t1)
       else:
         if cv2.waitKey(25) & 0xFF == ord('q'):
           break
@@ -286,5 +288,7 @@ if __name__ == '__main__':
     print('Model loaded successfuly')
   except:
     print("couldn't load the weights")
-  #model = load_mdl()
+  # model = load_mdl()
   test(test_path)
+  # test= fncn.load_single_test()
+  # evaluate(test)

@@ -215,12 +215,18 @@ def evaluate(test):
     sequences_reconstruction_cost = np.array([np.linalg.norm(np.subtract(sequences[i],reconstructed_sequences[i])) for i in range(0,sz)])
     sa = (sequences_reconstruction_cost - np.min(sequences_reconstruction_cost)) / np.max(sequences_reconstruction_cost)
     sr = 1.0 - sa
-    print(sr)
+    #print(sr)
+    try:
+      fle = open('IRIS-ringtone/textFile/text.txt', 'w')
+    except:
+      time.sleep(3)
+      fle = open('IRIS-ringtone/textFile/text.txt', 'w')
     if (sr<=0.96).any() or (sr<=0.96).all():
-      print('Anomaly Detected') 
+      fle.write('1')
       # print(time.clock())
     else:
-      print('everything is normal')
+      fle.write('0')
+    fle.close()
     #plot the regularity scores
     # print(sr)
     # plt.plot(sr)

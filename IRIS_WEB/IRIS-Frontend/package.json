@@ -1,0 +1,22 @@
+{
+  "name": "iris",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PiyushLakhotiya/IRIS.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PiyushLakhotiya/IRIS/issues"
+  },
+  "homepage": "https://github.com/PiyushLakhotiya/IRIS#readme",
+  "dependencies": {
+    "fetch": "^1.1.0"
+  }
+}

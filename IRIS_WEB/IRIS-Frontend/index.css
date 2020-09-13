@@ -1,0 +1,81 @@
+body {
+  height: 100%;
+  width: 100%;
+  background-color: black;
+}
+.form-control {
+    display: block;
+    width: 15%;
+    height: 35em;
+    margin: 7% auto 0 auto;
+    padding: 0.375rem 0.75rem;
+    color: #495057;
+    background-color: #7CF000;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  }
+  .btn {
+    display:block;
+    height: 100px;
+    font-size: large;
+    border-radius:2em;
+    margin: auto;
+    margin-top: 30px;
+    box-sizing: border-box;
+    text-decoration:none;
+    font-family:'Roboto',sans-serif;
+    font-weight:300;
+    color:#FFFFFF;
+    background-color:#4eb5f1;
+    text-align:center;
+    transition: all 0.2s;
+  }
+  .detected {
+    display: block;
+    height: 100px;
+    margin: auto;
+    border-radius: 2em;
+    font-size: 28px;
+    background-color: grey;
+    margin-top: 3%;
+    padding-top: 0;
+    box-sizing: border-box;
+    font-weight: bolder;
+    color: black;
+    text-align: center;
+  }
+  
+    .btn:hover{
+      background-color:#4095c6;
+    }
+    @media all and (max-width:30em){
+    .btn {
+      display: block;
+      margin: 0.2em auto;
+    }
+    }
+
+    /* body {
+      margin: 1%;
+      padding: 1%;
+      background-color: #000000;
+      font-size: 100%;
+      min-width: 500px;
+    } */
+    
+    header {
+      background-color: #ffffffa6;
+      padding: 1%;
+      margin: 1%;
+    }
+    
+    header h1 {
+      font-size: 3rem;
+      color: #000000;
+      position: relative;
+    }
+    h1 {
+      text-align: center;
+    }

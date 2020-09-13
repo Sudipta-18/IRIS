@@ -3,19 +3,19 @@ from email.mime.text import MIMEText
 import smtplib
 
 def anamoly_email_sender():
-    anamoly_types = {'Abuse': ['iris.police100@gmail.com', 'Abuse Alert', 'A physical abuse has been detected, requesting you to investigate the incident and report back'],
-                    'Arrest': ['iris.police100@gmail.com', 'Arrest Alert', 'An arrest has been detected, requesting you to investigate the incident and report back'],
-                    'Arson': ['iris.fire101@gmail.com', 'Arson Alert', 'Malicious burning has been detected, requesting fire brigade to normalize the condition and inform the nearest police station to investigate the incident and report back'],
-                    'Assault': ['iris.police100@gmail.com', 'Assault Alert', 'An assault has been detected, requesting you to investigate the incident and report back'],
-                    'Burglary': ['iris.police100@gmail.com', 'Burglary Alert', 'A suspicious activity has been detected, requesting you to investigate the incident and report back'],
-                    'Explosion': ['iris.fire101@gmail.com', 'Explosion Alert', 'An explosion has been detected, requesting fire brigade to normalize the condition and report back'],
-                    'Fighting': ['iris.police100@gmail.com', 'Fighting Alert', 'A tussle has been detected, requesting you to investigate the incident and report back'],
-                    'RoadAccidents': ['iris.hospital102@gmail.com', 'Road Accident Alert', 'A road accident has been detected, requesting you to aid the accident victim and report back'],
-                    'Robbery': ['iris.police100@gmail.com', 'Robbery Alert', 'A theft activity has been detected, requesting you to investigate the incident and report back'],
-                    'Shooting': ['iris.police100@gmail.com', 'Shooting Alert', 'A firing activity has been detected, requesting you to investigate the incident and report back'],
-                    'Shoplifting': ['iris.police100@gmail.com', 'Shoplifting Alert', 'A folk crime has been detected, requesting you to investigate the incident and report back'],
-                    'Stealing': ['iris.police100@gmail.com', 'Stealing Alert', 'A folk crime has been detected, requesting you to investigate the incident and report back'],
-                    'Vandalism': ['iris.police100@gmail.com', 'Vandalism Alert', 'Destruction of property has been detected, requesting you to investigate the incident and report back'],
+    anamoly_types = {'Abuse': ['iris.police100@gmail.com', 'Abuse Alert', 'A physical abuse has been detected, requesting you to investigate the incident'],
+                    'Arrest': ['iris.police100@gmail.com', 'Arrest Alert', 'An arrest has been detected, requesting you to investigate the incident'],
+                    'Arson': ['iris.fire101@gmail.com', 'Arson Alert', 'Malicious burning has been detected, requesting fire brigade to normalize the condition and inform the nearest police station to investigate the incident'],
+                    'Assault': ['iris.police100@gmail.com', 'Assault Alert', 'An assault has been detected, requesting you to investigate the incident'],
+                    'Burglary': ['iris.police100@gmail.com', 'Burglary Alert', 'A suspicious activity has been detected, requesting you to investigate the incident'],
+                    'Explosion': ['iris.fire101@gmail.com', 'Explosion Alert', 'An explosion has been detected, requesting fire brigade to normalize the condition'],
+                    'Fighting': ['iris.police100@gmail.com', 'Fighting Alert', 'A tussle has been detected, requesting you to investigate the incident'],
+                    'RoadAccidents': ['iris.hospital102@gmail.com', 'Road Accident Alert', 'A road accident has been detected, requesting you to aid the accident victim'],
+                    'Robbery': ['iris.police100@gmail.com', 'Robbery Alert', 'A theft activity has been detected, requesting you to investigate the incident'],
+                    'Shooting': ['iris.police100@gmail.com', 'Shooting Alert', 'A firing activity has been detected, requesting you to investigate the incident'],
+                    'Shoplifting': ['iris.police100@gmail.com', 'Shoplifting Alert', 'A folk crime has been detected, requesting you to investigate the incident'],
+                    'Stealing': ['iris.police100@gmail.com', 'Stealing Alert', 'A folk crime has been detected, requesting you to investigate the incident'],
+                    'Vandalism': ['iris.police100@gmail.com', 'Vandalism Alert', 'Destruction of property has been detected, requesting you to investigate the incident'],
                     'Normal': 0
                     }
 

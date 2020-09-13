@@ -362,7 +362,7 @@ def test(test_path):
 if __name__ == '__main__':
   model_path = 'Model/tpu_model.h5'
   train_path = '/content/drive/My Drive/Anomaly detection/UCF/Anomaly-Detection-Dataset/Train'
-  result_pth = 'result.txt'
+  result_pth = 'IRIS_WEB/IRIS-backend/public/text_files/text.txt'
   test_path = 'Test'
   cnfg = Config(train_path, test_path, model_path,result_pth, tst_seq = 120)
   fncn = Functions()

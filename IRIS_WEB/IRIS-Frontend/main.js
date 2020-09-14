@@ -5,7 +5,7 @@ let isTimerOn = true;
 let prev_content = 'Normal';
 
 function dataExtract() {
-  console.log('I just called');
+  console.log('Data Extract ...');
   fetch("http://localhost:3000/")
     .then(function (response) {
       return response.json();
@@ -21,7 +21,7 @@ function dataExtract() {
         isTimerOn = false;
       } else {
         // stopTimerButton();
-        console.log('I am here');
+        console.log('Anomaly Detected ...');
         domManipulation(myJson);
         anomalyDetected = true;
         setTimeout(() => {

@@ -5,7 +5,7 @@ let isTimerOn = true;
 let prev_content = 'Normal';
 
 function dataExtract() {
-  console.log('Data Extract ...');
+  console.log('I just called');
   fetch("http://localhost:3000/")
     .then(function (response) {
       return response.json();
@@ -15,13 +15,14 @@ function dataExtract() {
         document.querySelector('.second').style.backgroundColor = "#7CF000";
         document.querySelector('.a').classList.remove('form-control');
         document.querySelector('.a').classList.remove('detected');
+        document.querySelector('.a').textContent = null;
         isTimerOn = true;
         document.querySelector('#script-run').disabled = true;
       } else if(myJson.data === "Video Finished"){
         isTimerOn = false;
       } else {
         // stopTimerButton();
-        console.log('Anomaly Detected ...');
+        console.log('I am here');
         domManipulation(myJson);
         anomalyDetected = true;
         setTimeout(() => {

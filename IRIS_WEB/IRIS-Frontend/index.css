@@ -1,16 +1,26 @@
 body {
   height: 100%;
   width: 100%;
-  background-color: black;
+  background-color: white;
+  overflow: hidden;
+}
+.main{
+  display:grid;
+  grid-template-columns: repeat(1fr,3);
+  grid-template-rows: auto;
+  grid-template-areas:
+  ". boxx detc"
+  ". bt . ";
 }
 .form-control {
     display: block;
-    width: 15%;
-    height: 35em;
+    grid-area: boxx;
+    width: 75%;
+    height: 15em;
     margin: 7% auto 0 auto;
     padding: 0.375rem 0.75rem;
     color: #495057;
-    background-color: #7CF000;
+    background-color: grey;
     background-clip: padding-box;
     border: 1px solid #ced4da;
     border-radius: 0.25rem;
@@ -18,47 +28,64 @@ body {
   }
   .btn {
     display:block;
+    grid-area: bt;
+    word-wrap: break-word;
     height: 100px;
-    font-size: large;
+    font-size: 1.5rem;
     border-radius:2em;
     margin: auto;
     margin-top: 30px;
     box-sizing: border-box;
-    text-decoration:none;
-    font-family:'Roboto',sans-serif;
-    font-weight:300;
-    color:#FFFFFF;
-    background-color:#4eb5f1;
     text-align:center;
-    transition: all 0.2s;
+
+    box-sizing: border-box;
+    background-color: transparent;
+    border: 2px solid #e74c3c;
+    border-radius: 0.6em;
+    color: #e74c3c;
+    cursor: pointer;
+    line-height: 1;
+    padding: 1.2em 2.8em;
+    text-decoration: none;
+    text-align: center;
+    text-transform: uppercase;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    transition: box-shadow 300ms ease-in-out, color 300ms ease-in-out;
   }
+
   .detected {
     display: block;
+    grid-area: detc;
     height: 100px;
-    margin: auto;
     border-radius: 2em;
     font-size: 28px;
-    background-color: grey;
+    background-color: #0d0d0d4f;
+    padding: 10px;
     margin-top: 3%;
-    padding-top: 0;
     box-sizing: border-box;
     font-weight: bolder;
     color: black;
     text-align: center;
+    justify-self: center;
+    align-self:center; 
   }
   
-    .btn:hover{
-      background-color:#4095c6;
+    .btn:hover, .btn:focus {
+      color: #fff;
+      outline: 0;
+      box-shadow: 0 0 40px 40px #e74c3c inset;
     }
     @media all and (max-width:30em){
     .btn {
       display: block;
       margin: 0.2em auto;
+
     }
     }
 
-    /* body {
-      margin: 1%;
+      /* body {
+        margin: 1%;
       padding: 1%;
       background-color: #000000;
       font-size: 100%;
@@ -66,16 +93,18 @@ body {
     } */
     
     header {
-      background-color: #ffffffa6;
-      padding: 1%;
-      margin: 1%;
+      position: relative;
+      background-color: #72cbe3;
+      border: 2px solid #0a467b;
+      border-radius: 0 0 85% 85% / 40%;
     }
-    
-    header h1 {
+
+    h1 {
+      text-align: center;
       font-size: 3rem;
       color: #000000;
-      position: relative;
+
     }
-    h1 {
+    h2{
       text-align: center;
     }

@@ -1,7 +1,7 @@
 body {
   height: 100%;
   width: 100%;
-  background-color: white;
+  background-color: #000517;
   overflow: hidden;
 }
 .main{
@@ -10,7 +10,8 @@ body {
   grid-template-rows: auto;
   grid-template-areas:
   ". boxx detc"
-  ". bt . ";
+  ". bt . "
+  ". ress .";
 }
 .form-control {
     display: block;
@@ -22,7 +23,7 @@ body {
     color: #495057;
     background-color: grey;
     background-clip: padding-box;
-    border: 1px solid #ced4da;
+    /*border: 1px solid #ced4da;*/
     border-radius: 0.25rem;
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   }
@@ -58,23 +59,25 @@ body {
     display: block;
     grid-area: detc;
     height: 100px;
+    width: auto;
     border-radius: 2em;
     font-size: 28px;
-    background-color: #0d0d0d4f;
+    background-color: transparent;
+    border: 2px solid #000517;
     padding: 10px;
     margin-top: 3%;
     box-sizing: border-box;
     font-weight: bolder;
-    color: black;
+    color: #ff8f00;
     text-align: center;
-    justify-self: center;
+    justify-self: end;
     align-self:center; 
   }
   
     .btn:hover, .btn:focus {
       color: #fff;
       outline: 0;
-      box-shadow: 0 0 40px 40px #e74c3c inset;
+      box-shadow: 0 0 40px 40px #ff3d00 inset;
     }
     @media all and (max-width:30em){
     .btn {
@@ -94,7 +97,7 @@ body {
     
     header {
       position: relative;
-      background-color: #72cbe3;
+      background-color: #46d5c1eb;
       border: 2px solid #0a467b;
       border-radius: 0 0 85% 85% / 40%;
     }
@@ -108,3 +111,11 @@ body {
     h2{
       text-align: center;
     }
+.res{
+  grid-area: ress;
+  justify-self: center;
+  align-self:center; 
+  font-size: 28px;
+  color: #1ad00b;
+
+}

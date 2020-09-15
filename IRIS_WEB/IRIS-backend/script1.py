@@ -28,7 +28,7 @@ def anamoly_email_sender():
 
 def sendmail(reciever, emailsubject, body):
     msg = MIMEMultipart()
-    msg['From'] = "pakhiyakomaro@gmail.com"
+    msg['From'] = "iris.godeye@gmail.com"
     msg['To'] = reciever
     msg['Subject'] = emailsubject
     msg.attach(MIMEText(body, 'html'))
@@ -36,7 +36,7 @@ def sendmail(reciever, emailsubject, body):
 
     server = smtplib.SMTP("smtp.gmail.com", 587)
     server.starttls()
-    server.login(msg['From'], "share@1:)")
+    server.login(msg['From'], "IRIS/iris2020")
     server.sendmail(msg['From'], msg['To'], msg.as_string())
     server.quit()
 

@@ -12,14 +12,16 @@ function dataExtract() {
     })
     .then(function (myJson) {
       if(myJson.data === "Normal") {
-        document.querySelector('.second').style.backgroundColor = "#7CF000";
+        document.querySelector('.second').style.backgroundColor = "#80e27e";
         document.querySelector('.a').classList.remove('form-control');
         document.querySelector('.a').classList.remove('detected');
         document.querySelector('.a').textContent = null;
         isTimerOn = true;
         document.querySelector('#script-run').disabled = true;
+        document.querySelector('.res').textContent = null;
       } else if(myJson.data === "Video Finished"){
         isTimerOn = false;
+        document.querySelector('.res').textContent = null;
       } else {
         // stopTimerButton();
         console.log('I am here');
@@ -30,7 +32,10 @@ function dataExtract() {
             prev_content = myJson.data;
             scriptRun();
           } else {
-
+            // document.querySelector('.res').textContent = "Email script Stopped";
+          }
+          if(script === false){
+            document.querySelector('.res').textContent = "Email service Stopped";
           }
         }, 10000);
         isTimerOn=true;
@@ -52,7 +57,7 @@ function domManipulation(myJson) {
   document.querySelector('.second').style.backgroundColor = "#F32013";
   document.querySelector('.a').classList.add('form-control');
   document.querySelector('.a').classList.add('detected');
-  document.querySelector('.a').textContent = myJson.data;
+  document.querySelector('.a').textContent = `${myJson.data} Detected`;
   document.querySelector('#script-run').disabled = false;
 }
 
@@ -63,6 +68,10 @@ function commandPrompt() {
           stopTimerButton();
           scriptRun();
         }
+}
+
+function email() {
+document.querySelector('.res').textContent = "Authorities were alerted";
 }
 
 // const stopTimerButton = () => {
@@ -80,6 +89,7 @@ function commandPrompt() {
 
 function scriptRun() {
   console.log("Script Function Called!!!");
+  email();
   fetch("http://localhost:3000/script")
     .then(function (response) {
       return response.json();

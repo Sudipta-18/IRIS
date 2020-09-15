@@ -9,23 +9,24 @@ app.use(express.static(__dirname + '/public'));
 
 app.use(cors());
 
-function pythonScriptStart() {
-    var dataToSend;
-    // spawn new child process to call the python script
-    const python = spawn('python', ['../../model_v2.py']);
-    // collect data from script
-    python.stdout.on('data', function (data) {
-    // console.log('Pipe data from python script ...');
-    // dataToSend = data.toString();
-    // console.log(dataToSend);
-    });
-    // in close event we are sure that stream from child process is closed
-    python.on('close', (code) => {
-    // console.log(`child process close all stdio with code ${code}`);
-    // send data to browser
-    //return res.json({success: 1});
-    });
-}
+// function pythonScriptStart() {
+//     var dataToSend;
+//     // spawn new child process to call the python script
+//     const python = spawn('python', ['../../model_v2.py']);
+//     // collect data from script
+//     python.stdout.on('data', function (data) {
+//     // console.log('Pipe data from python script ...');
+//     // dataToSend = data.toString();
+//     // console.log(dataToSend);
+//     });
+//     // in close event we are sure that stream from child process is closed
+//     python.on('close', (code) => {
+//     // console.log(`child process close all stdio with code ${code}`);
+//     // send data to browser
+//     //return res.json({success: 1});
+//     });
+//     console.log('model Started')
+// }
 
 app.get('/', (req, res) => {
     fs.readFile('public/text_files/text.txt', function(err, data) {
@@ -60,7 +61,7 @@ app.get('/script', (req, res) => {
 
 const PORT = 3000;
 app.listen(PORT, () => {
-    pythonScriptStart();
+    // pythonScriptStart();
     console.log('Server Started!!!');
 });
 

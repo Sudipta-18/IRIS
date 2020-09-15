@@ -41,7 +41,7 @@ class Config():
 ##################### Class Preprocessing Functions ###########################################
 class Functions(Config):
   def __init__(self):
-    Config.__init__(self, train_path, test_path, model_path)
+    Config.__init__(self, train_path, test_path, model_path,result_pth)
 
     # load buffer :- frm_cnt : stores the no of frames already loaded of the current video (None represents end of current video)
     #                indx : stores the indx of the video which is being processed / being loaded
@@ -272,10 +272,21 @@ def evaluate(test, typ):
         time.sleep(0.001)
         print('file is busy')
         continue
+    flag = 0
+    length = len(sr)
+    ct = 0
+    for i in sr:
+      if i <= 0.96:
+        ct += 1
+      if (ct/length )== 0.3:
+        flag = 1
     
-    if (sr<=0.96).any() or (sr<=0.96).all():
+    if flag:
       fle.write(typ)
-      print('detected anomaly')
+      print('detected anomaly')    
+    # if (sr<=0.96).any() or (sr<=0.96).all():
+    #   fle.write(typ)
+    #   print('detected anomaly')
 
     else:
       fle.write('Normal')
@@ -290,13 +301,15 @@ def evaluate(test, typ):
     # plt.xlabel('frame t')
     # plt.show()
 def play2(pth):
+  time.sleep(7)
   vid = cv2.VideoCapture(pth)
   while vid.isOpened():
     ret, frame = vid.read()
     if not ret:
       break
+    frame = cv2.resize(frame,(512,512))
     cv2.imshow('vid', frame)
-    if cv2.waitKey(25) & 0xFF == ord('q'):
+    if cv2.waitKey(30) & 0xFF == ord('q'):
       break
   vid.release()
   cv2.destroyAllWindows()
@@ -333,7 +346,7 @@ def test(test_path):
       if not ret:
         break
       n+= 1
-      time.sleep(0.025)
+      time.sleep(0.030)
       frm = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
       frm = cv2.resize(frm/256, img_dim)
       frames.append(frm.reshape((img_dim[0],img_dim[1], 1)))
@@ -364,7 +377,7 @@ if __name__ == '__main__':
   train_path = '/content/drive/My Drive/Anomaly detection/UCF/Anomaly-Detection-Dataset/Train'
   result_pth = 'IRIS_WEB/IRIS-backend/public/text_files/text.txt'
   test_path = 'Test'
-  cnfg = Config(train_path, test_path, model_path,result_pth, tst_seq = 120)
+  cnfg = Config(train_path, test_path, model_path,result_pth, tst_seq = 300)
   fncn = Functions()
   mdl = Model()
   img_dim = (128, 128)
